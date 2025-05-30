@@ -3,25 +3,201 @@
   /* Estilos para la barra de navegación */
   .navbar {
     background-color: #e9ecef !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
   }
 
   .navbar-brand {
     color: #212529 !important;
     font-weight: bold;
+    transition: color 0.3s ease;
   }
 
   .nav-item {
     color: #212529 !important;
+    transition: color 0.3s ease;
   }
 
   .btn-outline-light {
     color: #212529 !important;
     border-color: #212529 !important;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
   }
 
   .btn-outline-light:hover {
     background-color: #212529 !important;
     color: #e9ecef !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  .btn-outline-light:active {
+    transform: translateY(0);
+  }
+
+  /* Estilos para cards */
+  .card {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  /* Estilos para el texto del ID del dispositivo */
+  .card-text {
+    color: #495057;
+    font-weight: 500;
+  }
+
+  body.dark-theme .card-text {
+    color: #e9ecef;
+    font-weight: 500;
+  }
+
+  /* Estilos para el título de la card */
+  .card-title {
+    color: #212529;
+    font-weight: 600;
+  }
+
+  body.dark-theme .card-title {
+    color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  /* Estilos para botones */
+  .btn {
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn-success {
+    background: linear-gradient(45deg, #198754, #20c997);
+    border: none;
+  }
+
+  .btn-danger {
+    background: linear-gradient(45deg, #dc3545, #ff4d5a);
+    border: none;
+    color: #fff !important;
+    min-width: 200px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-danger:hover {
+    background: linear-gradient(45deg, #ff4d5a, #dc3545);
+    color: #fff !important;
+  }
+
+  .btn-warning {
+    background: linear-gradient(45deg, #ffc107, #ffb300);
+    border: none;
+    color: #000;
+    min-width: 150px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-warning:hover {
+    background: linear-gradient(45deg, #ffb300, #ffa000);
+    color: #000;
+  }
+
+  .btn-info {
+    background: linear-gradient(45deg, #0dcaf0, #0bb6d4);
+    border: none;
+    color: #000;
+    min-width: 100px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-info:hover {
+    background: linear-gradient(45deg, #0bb6d4, #0aa2bd);
+    color: #000;
+  }
+
+  /* Estilos para formularios */
+  .form-control {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #212529;
+    box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.15);
+  }
+
+  .form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #495057;
+  }
+
+  /* Estilos para mensajes flash */
+  .flash-message {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    animation: slideIn 0.5s ease-out;
+  }
+
+  .flash-message.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
   }
 
   /* Estilos para el tema oscuro */
@@ -32,6 +208,7 @@
 
   body.dark-theme .navbar {
     background-color: #1e2124 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
 
   body.dark-theme .navbar-brand {
@@ -55,52 +232,81 @@
   body.dark-theme .card {
     background-color: #1e2124;
     border-color: #141517;
-    color: #f8f9fa;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   }
 
-  body.dark-theme .card-title {
-    color: #f8f9fa;
+  body.dark-theme .card:hover {
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
   }
 
   body.dark-theme .form-control {
     background-color: #141517;
-    border-color: #1e2124;
+    border-color: #2c3034;
     color: #f8f9fa;
   }
 
   body.dark-theme .form-control:focus {
-    background-color: #141517;
-    color: #f8f9fa;
-    border-color: #2c3034;
-    box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);
+    border-color: #495057;
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.25);
   }
 
-  body.dark-theme .form-control::placeholder {
+  body.dark-theme .form-label {
     color: #adb5bd;
   }
 
-  /* Estilos para botones */
-  body.dark-theme .btn-primary {
-    background-color: #1e2124;
-    border-color: #141517;
-    color: #f8f9fa;
+  /* Estilos para el mensaje de información */
+  .info-message {
+    background-color: #e9ecef !important;
+    border-color: #dee2e6 !important;
+    color: #212529 !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
 
-  body.dark-theme .btn-primary:hover {
+  body.dark-theme .info-message {
+    background-color: #1e2124 !important;
+    border-color: #141517 !important;
+    color: #f8f9fa !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+
+  /* Estilos para selectores */
+  .form-select {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    height: 38px;
+  }
+
+  body.dark-theme .form-select {
     background-color: #141517;
-    border-color: #0a0b0c;
+    border-color: #2c3034;
     color: #f8f9fa;
   }
 
-  body.dark-theme .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: #f8f9fa;
+  /* Estilos para iconos */
+  .bi {
+    transition: transform 0.3s ease;
   }
 
-  body.dark-theme .btn-danger:hover {
-    background-color: #bb2d3b;
-    border-color: #b02a37;
+  .btn:hover .bi {
+    transform: scale(1.1);
+  }
+
+  /* Estilos para títulos */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  body.dark-theme h1, 
+  body.dark-theme h2, 
+  body.dark-theme h3, 
+  body.dark-theme h4, 
+  body.dark-theme h5, 
+  body.dark-theme h6 {
     color: #f8f9fa;
   }
 
@@ -175,7 +381,8 @@
   .control-buttons {
     display: flex;
     gap: 1rem;
-    margin-right: 1rem;
+    align-items: center;
+    justify-content: center;
   }
 
   .btn-flash {
@@ -200,46 +407,6 @@
     background-color: #31d2f2;
     border-color: #25cff2;
     color: #000;
-  }
-
-  /* Estilos para mensajes flash */
-  .flash-messages {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    max-width: 300px;
-  }
-
-  .flash-message {
-    margin-bottom: 10px;
-    animation: slideIn 0.5s ease-out;
-  }
-
-  @keyframes slideIn {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  .flash-message.fade-out {
-    animation: fadeOut 0.5s ease-out forwards;
-  }
-
-  @keyframes fadeOut {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(100%);
-      opacity: 0;
-    }
   }
 
   /* Estilos para alertas específicas */
@@ -267,31 +434,45 @@
     color: #fff !important;
   }
 
-  /* Estilos para el mensaje de información */
-  .info-message {
-    background-color: #e9ecef !important;
-    border-color: #dee2e6 !important;
-    color: #212529 !important;
-  }
-
-  body.dark-theme .info-message {
-    background-color: #1e2124 !important;
-    border-color: #141517 !important;
-    color: #f8f9fa !important;
-  }
-
-  /* Estilos para los botones de control específicos */
-  .btn-warning {
-    background-color: #ffc107;
-    border-color: #ffc107;
+  /* Ajustes para el modo oscuro */
+  body.dark-theme .btn-warning {
+    background: linear-gradient(45deg, #ffc107, #ffb300);
     color: #000;
-    min-width: 120px;
   }
 
-  .btn-warning:hover {
-    background-color: #ffb300;
-    border-color: #ffb300;
+  body.dark-theme .btn-warning:hover {
+    background: linear-gradient(45deg, #ffb300, #ffa000);
     color: #000;
+  }
+
+  body.dark-theme .btn-info {
+    background: linear-gradient(45deg, #0dcaf0, #0bb6d4);
+    color: #000;
+  }
+
+  body.dark-theme .btn-info:hover {
+    background: linear-gradient(45deg, #0bb6d4, #0aa2bd);
+    color: #000;
+  }
+
+  /* Ajustes para los iconos en los botones */
+  .btn i {
+    margin-right: 8px;
+    font-size: 1.1em;
+  }
+
+  .btn-warning .fa-lightbulb {
+    color: #000;
+    opacity: 1;
+    filter: none;
+  }
+
+  /* Ajustes para el contenedor de controles */
+  .control-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
   }
 
   .fa-lightbulb {
@@ -307,15 +488,20 @@
 
   .input-group {
     width: auto;
+    display: flex;
+    align-items: center;
   }
 
   .input-group .form-control {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    height: 38px;
+    width: 150px;
   }
 
   .input-group .btn {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    margin-left: -1px;
   }
 </style> 
