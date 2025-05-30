@@ -295,13 +295,6 @@ def setpoint_command():
         flash('Error al actualizar el setpoint', "danger")
         return redirect(url_for('index'))
 
-@app.route('/values', methods=['GET'])
-@require_login
-def get_values():
-    return jsonify({
-        "flash": 1,
-        "setpoint": 0.0
-    }), 200
 
 @app.route('/agregar_nodo', methods=['GET', 'POST'])
 @require_login

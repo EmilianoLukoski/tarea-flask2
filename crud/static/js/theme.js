@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   } else {
-    // Si no está el toggle (usuario no logueado), forzar claro
+    // Si no está el toggle (usuario no logueado), forzar oscuro
     applyTheme('dark');
   }
 }); 
