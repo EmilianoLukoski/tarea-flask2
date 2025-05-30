@@ -10,6 +10,10 @@ services:
       - MYSQL_DB=${CRUD_DB}
       - MYSQL_HOST=${MARIADB_SERVER}
       - FLASK_SECRET_KEY=${FLASK_SECRET_KEY}
+      - MQTT_BROKER=${MQTT_BROKER}
+      - MQTT_PORT=${MQTT_PORT}
+      - MQTT_USR=${MQTT_USR}
+      - MQTT_PASS=${MQTT_PASS}
     ports:
       - "8001:8001"   
     networks:

@@ -1,31 +1,120 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div class="text-center pt-5">
-    <div class="card mx-auto" style="max-width: 600px;">
-        <div class="card-body">
-            <h1 class="card-title mb-4">¡Bienvenido, {{ username }}! 👋</h1>
-            <p>Seleccione el nodo destinatario:</p>
-            <form action="{{ url_for('flash_command') }}" method="POST" class="mb-3">
-                <div class="d-flex align-items-center">
-                    <select name="nodo_id" class="form-control me-2" style="width: 435px;">
-                        {% for nodo in nodos %}
-                            <option value="{{ nodo[0] }}">{{ nodo[1] }}</option>
-                        {% endfor %}
-                    </select>
-                    <a href="{{ url_for('agregar_nodo') }}" class="btn btn-danger">Agregar Nodo</a>
-                </div>
-                <button type="submit" class="btn btn-flash mt-3" title="Destellar">
-                    <i class="bi bi-lightning-fill"></i> Destellar
-                </button>
-            </form>
-            <form action="{{ url_for('setpoint_command') }}" method="GET" class="mb-3">
-                <input type="number" step="any" name="setpoint" class="form-control mb-3" placeholder="Ingrese el Setpoint">
-                <button type="submit" class="btn btn-setpoint" title="Configurar Setpoint">
-                    <i class="bi bi-sliders"></i> Aplicar Setpoint
-                </button>
-            </form>
-        </div>
+<div class="container">
+  <h1 class="mb-4 text-center">¡Bienvenido, {{ username }}!</h1>
+
+  <!-- Selector de dispositivo y botón agregar -->
+  <div class="card mb-4">
+    <div class="card-body text-center">
+      <h5 class="card-title">Seleccionar Dispositivo</h5>
+      <form action="{{ url_for('seleccionar_dispositivo') }}" method="POST" class="d-flex justify-content-center align-items-center">
+        <select name="id_dispositivo" class="form-select me-2" style="max-width: 300px;" onchange="this.form.submit()">
+          <option value="">Seleccione un dispositivo</option>
+          {% for nodo in nodos %}
+          <option value="{{ nodo[2] }}" {% if nodo[2] == dispositivo_seleccionado %}selected{% endif %}>{{ nodo[1] }}</option>
+          {% endfor %}
+        </select>
+        <a href="{{ url_for('agregar_nodo') }}" class="btn btn-danger">
+          <i class="fas fa-plus me-2"></i>Agregar Nodo
+        </a>
+      </form>
     </div>
+  </div>
+
+  <!-- Nodo seleccionado -->
+  {% if dispositivo_seleccionado %}
+    {% for nodo in nodos %}
+      {% if nodo[2] == dispositivo_seleccionado %}
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ nodo[1] }}</h5>
+          <p class="card-text">ID: {{ nodo[2] }}</p>
+          
+          <!-- Controles de destello y setpoint -->
+          <div class="d-flex justify-content-center gap-3 mb-3">
+            <!-- Botón de destello -->
+            <form action="{{ url_for('flash_command') }}" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-warning">
+                Destellar <i class="fas fa-lightbulb ms-2"></i>
+              </button>
+            </form>
+
+            <!-- Control de setpoint -->
+            <form action="{{ url_for('setpoint_command') }}" method="GET" class="d-inline">
+              <div class="input-group">
+                <input type="number" name="setpoint" class="form-control" placeholder="Setpoint" step="0.1" style="width: 100px;">
+                <button type="submit" class="btn btn-info">
+                  <i class="fas fa-cog me-2"></i>Enviar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info text-center">
+      Por favor, seleccione un dispositivo para ver sus opciones de control.
+    </div>
+  {% endif %}
 </div>
+
+<!-- Agregar Font Awesome para los íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+    min-width: 120px;
+}
+
+.btn-warning:hover {
+    background-color: #ffb300;
+    border-color: #ffb300;
+    color: #000;
+}
+
+.fa-lightbulb {
+    color: #b8860b;  /* Color dorado oscuro */
+    opacity: 1;
+    filter: drop-shadow(0 0 2px rgb(226, 171, 32));
+    font-size: 1.1em;  /* Hacer el ícono un poco más grande */
+}
+
+.card-body.text-center {
+    padding: 2rem;
+}
+
+.input-group {
+    width: auto;
+}
+
+.input-group .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+</style>
+
+<script>
+// Seleccionar automáticamente el primer dispositivo si no hay ninguno seleccionado
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.querySelector('select[name="id_dispositivo"]');
+    if (select && !select.value) {
+        const firstOption = select.querySelector('option:not([value=""])');
+        if (firstOption) {
+            firstOption.selected = true;
+            select.form.submit();
+        }
+    }
+});
+</script>
 {% endblock %}

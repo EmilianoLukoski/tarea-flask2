@@ -287,35 +287,75 @@
     body:not(.dark-theme) .dark-theme-alert {
       display: none;
     }
+
+    /* Estilos para las notificaciones */
+    .alert-success {
+      background-color: #198754 !important;
+      border-color: #198754 !important;
+      color: #fff !important;
+    }
+
+    .alert-danger {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+      color: #fff !important;
+    }
+
+    body.dark-theme .alert-success {
+      background-color: #198754 !important;
+      border-color: #198754 !important;
+      color: #fff !important;
+    }
+
+    body.dark-theme .alert-danger {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+      color: #fff !important;
+    }
+
+    .flash-message {
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .flash-message.fade-out {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="flash-messages">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-primary alert-dismissible fade show flash-message light-theme-alert" role="alert">
+  {% if get_flashed_messages() %}
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-dismissible fade show flash-message {% if category == 'success' %}alert-success{% elif category == 'danger' %}alert-danger{% endif %}" role="alert">
       {{ message }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endfor %}
-    {% endif %}
-    {% endwith %}
   </div>
-
-  <div class="flash-messages">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-danger alert-dismissible fade show flash-message dark-theme-alert" role="alert">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-  </div>
+  {% endif %}
 
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
@@ -352,9 +392,10 @@
     window.IS_AUTHENTICATED = {% if session.get('user_id') %}true{% else %}false{% endif %};
     window.UPDATE_THEME_URL = "{{ url_for('actualizar_tema') }}";
   </script>
+  
   <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
   <script>
-    // Auto-cerrar los mensajes después de 5 segundos
+    // Auto-cerrar los mensajes después de 3 segundos
     document.addEventListener('DOMContentLoaded', function() {
       const flashMessages = document.querySelectorAll('.flash-message');
       flashMessages.forEach(function(message) {
@@ -363,7 +404,7 @@
           setTimeout(function() {
             message.remove();
           }, 500);
-        }, 5000);
+        }, 3000);
       });
     });
   </script>
