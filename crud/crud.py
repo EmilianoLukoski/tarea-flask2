@@ -87,19 +87,16 @@ def registrar():
             passhash = generate_password_hash(password, method='scrypt', salt_length=16)
             cur.execute("INSERT INTO usuarios (usuario, hash) VALUES (%s, %s)", (usuario, passhash[17:]))
             mysql.connection.commit()
+            cur.close()
             
-            if mysql.connection.affected_rows():
-                flash("¡Usuario registrado correctamente! Por favor inicie sesión")
-                logging.info("Se agregó un usuario")
-                return redirect(url_for('login'))
+            flash("¡Usuario creado con éxito! Por favor inicie sesión")
+            logging.info("Se agregó un usuario")
+            return redirect(url_for('login'))
             
         except Exception as e:
             logging.error(f"Error en el registro: {str(e)}")
             flash('Error al registrar el usuario. Por favor, intente nuevamente.')
             return redirect(url_for('registrar'))
-        finally:
-            if 'cur' in locals():
-                cur.close()
             
     return render_template('registrar.html')
 
