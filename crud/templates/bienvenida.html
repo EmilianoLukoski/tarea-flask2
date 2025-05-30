@@ -55,7 +55,7 @@
       {% endif %}
     {% endfor %}
   {% else %}
-    <div class="alert alert-info text-center">
+    <div class="alert alert-info text-center info-message">
       Por favor, seleccione un dispositivo para ver sus opciones de control.
     </div>
   {% endif %}
@@ -101,6 +101,19 @@
 .input-group .btn {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+/* Estilo para el mensaje de información */
+.info-message {
+    background-color: #ced4da !important;
+    border-color: #adb5bd !important;
+    color: #343a40 !important;
+}
+
+body.dark-theme .info-message {
+    background-color: #495057 !important;
+    border-color: #343a40 !important;
+    color: #f8f9fa !important;
 }
 </style>
 {% endblock %}

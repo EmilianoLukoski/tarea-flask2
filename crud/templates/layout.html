@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es" data-theme="{% if tema_preferido %}dark{% else %}light{% endif %}">
 
 <head>
   <meta charset="UTF-8" />
@@ -345,7 +345,7 @@
   </style>
 </head>
 
-<body>
+<body class="{% if tema_preferido %}dark-theme{% endif %}">
   {% if get_flashed_messages() %}
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
     {% for category, message in get_flashed_messages(with_categories=true) %}
