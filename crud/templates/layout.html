@@ -317,20 +317,23 @@
     {% endwith %}
   </div>
 
-  {% if session.get("user_id") %}
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('index') }}">Control de Nodos</a>
+      <a class="navbar-brand" href="{{ url_for('index') if session.get('user_id') else url_for('login') }}">Control de Nodos</a>
       <div class="d-flex align-items-center">
         <button id="theme-toggle" class="btn btn-outline-light me-3" title="Cambiar tema">
           <i class="bi bi-sun-fill"></i>
         </button>
-        <div class="nav-item pe-3 pt-2">{{ session.get("user_id") }}</div>
+        {% if session.get("user_id") %}
+        <div class="nav-item pe-3 d-flex align-items-center">
+          <i class="bi bi-person-circle me-2 fs-5"></i>
+          <span class="fw-bold fs-5">{{ session.get("user_id") }}</span>
+        </div>
         <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar sesión</a>
+        {% endif %}
       </div>
     </div>
   </nav>
-  {% endif %}
 
   <div class="container pt-4">
     {% block body %}
@@ -344,43 +347,13 @@
   ></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const themeToggle = document.getElementById('theme-toggle');
-      const themeCss = document.getElementById('theme-css');
-      const themeIcon = themeToggle?.querySelector('i');
-
-      // Función para aplicar tema
-      function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        if (theme === 'dark') {
-          if (themeIcon) themeIcon.className = 'bi bi-moon-fill';
-          document.body.classList.remove('light-theme');
-          document.body.classList.add('dark-theme');
-        } else {
-          if (themeIcon) themeIcon.className = 'bi bi-sun-fill';
-          document.body.classList.remove('dark-theme');
-          document.body.classList.add('light-theme');
-        }
-      }
-
-      // Cargar tema guardado o defecto a light
-      let savedTheme = localStorage.getItem('theme') || 'light';
-      applyTheme(savedTheme);
-
-      // Cambiar tema al hacer click
-      if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-          let currentTheme = document.documentElement.getAttribute('data-theme');
-          let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-          applyTheme(newTheme);
-          localStorage.setItem('theme', newTheme);
-        });
-      } else {
-        // Si no está el toggle (usuario no logueado), forzar claro
-        applyTheme('light');
-      }
-    });
-
+    // Variables globales para el tema
+    window.USER_THEME = {% if tema_preferido is defined %}{{ tema_preferido }}{% else %}0{% endif %};
+    window.IS_AUTHENTICATED = {% if session.get('user_id') %}true{% else %}false{% endif %};
+    window.UPDATE_THEME_URL = "{{ url_for('actualizar_tema') }}";
+  </script>
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  <script>
     // Auto-cerrar los mensajes después de 5 segundos
     document.addEventListener('DOMContentLoaded', function() {
       const flashMessages = document.querySelectorAll('.flash-message');

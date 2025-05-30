@@ -57,8 +57,17 @@ def index():
         cur = mysql.connection.cursor()
         cur.execute("SELECT id, nombre FROM nodos")
         nodos = cur.fetchall()
+        
+        # Obtener la preferencia de tema del usuario
+        cur.execute("SELECT tema FROM usuarios WHERE usuario = %s", (session.get("user_id"),))
+        tema_result = cur.fetchone()
+        tema_preferido = tema_result[0] if tema_result else 0
+        
         cur.close()
-        return render_template('bienvenida.html', username=session.get("user_id"), nodos=nodos)
+        return render_template('bienvenida.html', 
+                             username=session.get("user_id"), 
+                             nodos=nodos,
+                             tema_preferido=tema_preferido)
     except Exception as e:
         logging.error(f"Error al obtener nodos: {str(e)}")
         flash("Error al cargar la lista de nodos")
@@ -123,6 +132,7 @@ def login():
             if rows and check_password_hash('scrypt:32768:8:1$' + rows[2], password):
                 session.permanent = True
                 session["user_id"] = usuario
+                session["tema"] = rows[3]  # Guardar la preferencia de tema en la sesión
                 logging.info(f"Usuario autenticado exitosamente: {usuario}")
                 return redirect(url_for('index'))
             else:
@@ -165,15 +175,27 @@ def flash_command():
         flash('Error al enviar el comando de destello')
         return redirect(url_for('index'))
 
-@app.route('/setpoint', methods=['POST'])
+@app.route('/setpoint', methods=['GET', 'POST'])
 @require_login
 def setpoint_command():
     try:
+        if request.method == 'GET':
+            setpoint = request.args.get('setpoint')
+            if not setpoint or setpoint.strip() == '':
+                logging.info("Intento de actualizar setpoint sin valor")
+                flash("No se proporcionó un valor de setpoint")
+                return redirect(url_for('index'))
+                
+            logging.info(f"Valor de setpoint recibido: {setpoint}")
+            flash(f"Setpoint actualizado correctamente a {setpoint}")
+            return redirect(url_for('index'))
+            
+        # Para POST mantenemos el comportamiento actual
         logging.info("Recibida petición POST a /setpoint")
         flash("Setpoint actualizado correctamente")
         return redirect(url_for('index'))
     except Exception as e:
-        logging.error(f"Error al actualizar setpoint: {str(e)}")
+        logging.error(f"Error al procesar setpoint: {str(e)}")
         flash('Error al actualizar el setpoint')
         return redirect(url_for('index'))
 
@@ -211,3 +233,21 @@ def agregar_nodo():
             return redirect(url_for('agregar_nodo'))
     
     return render_template('agregar_nodo.html')
+
+@app.route('/actualizar_tema', methods=['POST'])
+@require_login
+def actualizar_tema():
+    try:
+        tema = request.form.get('tema')
+        if tema is not None:
+            tema_valor = 1 if tema == 'dark' else 0
+            cur = mysql.connection.cursor()
+            cur.execute("UPDATE usuarios SET tema = %s WHERE usuario = %s", 
+                       (tema_valor, session.get("user_id")))
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({"success": True}), 200
+        return jsonify({"error": "No se proporcionó tema"}), 400
+    except Exception as e:
+        logging.error(f"Error al actualizar tema: {str(e)}")
+        return jsonify({"error": "Error al actualizar tema"}), 500
