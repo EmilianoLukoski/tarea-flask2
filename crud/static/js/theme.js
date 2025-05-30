@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     savedTheme = USER_THEME === 1 ? 'dark' : 'light';
   } else {
     // Si no está autenticado, usar el tema guardado en localStorage o light por defecto
-    savedTheme = savedTheme || 'light';
+    savedTheme = savedTheme || 'dark';
   }
   applyTheme(savedTheme);
 
@@ -49,6 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   } else {
     // Si no está el toggle (usuario no logueado), forzar claro
-    applyTheme('light');
+    applyTheme('dark');
   }
 }); 
