@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sistema de Autenticación</title>
+
+  <!-- Tema claro por defecto -->
+  <link id="theme-css" rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+
+  <style>
+    /* Opcional: estilos extra si querés */
+  </style>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-info alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  {% if session.get("user_id") %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('index') }}">Sistema de Autenticación</a>
+      <div class="d-flex align-items-center">
+        <button id="theme-toggle" class="btn btn-outline-light me-3" title="Cambiar tema">
+          <i class="bi bi-sun-fill"></i>
+        </button>
+        <div class="nav-item pe-3 pt-2">{{ session.get("user_id") }}</div>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar sesión</a>
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+</head>
+
+<body>
+  <div class="container pt-4">
+    {% block body %}
+    {% endblock %}
+  </div>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeCss = document.getElementById('theme-css');
+      const themeIcon = themeToggle?.querySelector('i');
+
+      // Función para aplicar tema
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          themeCss.href = 'https://bootswatch.com/5/darkly/bootstrap.min.css';
+          if (themeIcon) themeIcon.className = 'bi bi-moon-fill';
+          document.body.classList.remove('light-theme');
+          document.body.classList.add('dark-theme');
+        } else {
+          themeCss.href = 'https://bootswatch.com/5/flatly/bootstrap.min.css';
+          if (themeIcon) themeIcon.className = 'bi bi-sun-fill';
+          document.body.classList.remove('dark-theme');
+          document.body.classList.add('light-theme');
+        }
+      }
+
+      // Cargar tema guardado o defecto a light
+      let savedTheme = localStorage.getItem('theme') || 'light';
+      applyTheme(savedTheme);
+
+      // Cambiar tema al hacer click
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          let currentTheme = document.documentElement.getAttribute('data-theme');
+          let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(newTheme);
+          localStorage.setItem('theme', newTheme);
+        });
+      } else {
+        // Si no está el toggle (usuario no logueado), forzar claro
+        applyTheme('light');
+      }
+    });
+  </script>
+</body>
+
+</html>

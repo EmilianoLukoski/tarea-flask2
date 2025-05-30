@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Bienvenido</title>
+</head>
+<body>
+    <h1>¡Bienvenido, {{ username }}!</h1>
+    <button onclick="toggleTheme()">Cambiar Tema</button>
+    <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="text-center pt-5">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h1 class="card-title mb-4">¡Bienvenido, {{ username }}! 👋</h1>
+            <p class="card-text">Has iniciado sesión correctamente en el sistema.</p>
+            <div class="mt-4">
+                <a href="{{ url_for('logout') }}" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

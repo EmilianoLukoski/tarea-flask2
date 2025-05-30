@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="auth-form">
+    <h2 class="text-center mb-4">Registro de Usuario</h2>
+    <form method="POST" action="{{url_for('registrar')}}">
+        <div class="mb-3">
+            <input class="form-control" autofocus name="usuario" placeholder="Usuario" type="text" required>
+        </div>
+        <div class="mb-3">
+            <input class="form-control" name="password" placeholder="Contraseña" type="password" required>
+        </div>
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Registrarse</button>
+        </div>
+        <div class="text-center mt-3">
+            <a href="{{url_for('login')}}" class="text-decoration-none">¿Ya tienes cuenta? Inicia sesión</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
