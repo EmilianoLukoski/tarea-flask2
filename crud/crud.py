@@ -136,7 +136,8 @@ def seleccionar_dispositivo():
             session['id_dispositivo'] = id_dispositivo
             flash(f"Dispositivo seleccionado correctamente", "success")
         else:
-            flash("No se seleccionó ningún dispositivo", "danger")
+            session.pop('id_dispositivo', None)  # Eliminar el dispositivo seleccionado
+            flash("Por favor, seleccione un dispositivo para ver sus opciones de control.", "danger")
         return redirect(url_for('index'))
     except Exception as e:
         logging.error(f"Error al seleccionar dispositivo: {str(e)}")

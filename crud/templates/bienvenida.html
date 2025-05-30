@@ -103,18 +103,4 @@
     border-bottom-left-radius: 0;
 }
 </style>
-
-<script>
-// Seleccionar automáticamente el primer dispositivo si no hay ninguno seleccionado
-document.addEventListener('DOMContentLoaded', function() {
-    const select = document.querySelector('select[name="id_dispositivo"]');
-    if (select && !select.value) {
-        const firstOption = select.querySelector('option:not([value=""])');
-        if (firstOption) {
-            firstOption.selected = true;
-            select.form.submit();
-        }
-    }
-});
-</script>
 {% endblock %}
