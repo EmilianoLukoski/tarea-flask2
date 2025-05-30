@@ -1,15 +1,30 @@
 {% extends "layout.html" %}
+
 {% block body %}
 <div class="text-center pt-5">
     <div class="card mx-auto" style="max-width: 600px;">
         <div class="card-body">
             <h1 class="card-title mb-4">¡Bienvenido, {{ username }}! 👋</h1>
-            <p class="card-text">Has iniciado sesión correctamente en el sistema.</p>
-            <div class="mt-4">
-                <a href="{{ url_for('logout') }}" class="btn btn-danger">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                </a>
-            </div>
+            <p>Seleccione el nodo destinatario:</p>
+            <form action="{{ url_for('flash_command') }}" method="POST" class="mb-3">
+                <div class="d-flex align-items-center">
+                    <select name="nodo_id" class="form-control me-2" style="width: 435px;">
+                        {% for nodo in nodos %}
+                            <option value="{{ nodo[0] }}">{{ nodo[1] }}</option>
+                        {% endfor %}
+                    </select>
+                    <a href="{{ url_for('agregar_nodo') }}" class="btn btn-danger">Agregar Nodo</a>
+                </div>
+                <button type="submit" class="btn btn-flash mt-3" title="Destellar">
+                    <i class="bi bi-lightning-fill"></i> Destellar
+                </button>
+            </form>
+            <form action="{{ url_for('setpoint_command') }}" method="POST" class="mb-3">
+                <input type="number" step="any" name="setpoint" class="form-control mb-3" placeholder="Ingrese el Setpoint">
+                <button type="submit" class="btn btn-setpoint" title="Configurar Setpoint">
+                    <i class="bi bi-sliders"></i> Aplicar
+                </button>
+            </form>
         </div>
     </div>
 </div>

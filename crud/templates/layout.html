@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sistema de Autenticación</title>
+  <title>Control de Nodos</title>
 
   <!-- Tema claro por defecto -->
-  <link id="theme-css" rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css" />
+  <link id="theme-css" rel="stylesheet" href="https://bootswatch.com/5/sandstone/bootstrap.min.css" />
 
   <link
     rel="stylesheet"
@@ -15,24 +15,272 @@
   />
 
   <style>
-    /* Opcional: estilos extra si querés */
-  </style>
+    /* Estilos para la barra de navegación en modo claro */
+    .navbar {
+      background-color: #343a40 !important;
+    }
 
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-info alert-dismissible fade show" role="alert">
-    {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    .nav-item {
+      color: #f8f9fa !important;
+    }
+
+    /* Estilos para el tema oscuro de Sandstone */
+    body.dark-theme {
+      background-color: #212529;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .navbar {
+      background-color: #343a40 !important;
+    }
+
+    body.dark-theme .navbar-brand,
+    body.dark-theme .nav-link {
+      color: #f8f9fa !important;
+    }
+
+    body.dark-theme .card {
+      background-color: #343a40;
+      border-color: #212529;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .card-title {
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .form-control {
+      background-color: #212529;
+      border-color: #495057;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .form-control:focus {
+      background-color: #212529;
+      color: #f8f9fa;
+      border-color: #6c757d;
+      box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);
+    }
+
+    body.dark-theme .form-control::placeholder {
+      color: #adb5bd;
+    }
+
+    body.dark-theme .btn-primary {
+      background-color: #495057;
+      border-color: #343a40;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .btn-primary:hover {
+      background-color: #343a40;
+      border-color: #212529;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .btn-danger:hover {
+      background-color: #bb2d3b;
+      border-color: #b02a37;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .btn-outline-light {
+      color: #f8f9fa;
+      border-color: #f8f9fa;
+    }
+
+    body.dark-theme .btn-outline-light:hover {
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+
+    body.dark-theme .alert {
+      background-color: #343a40;
+      border-color: #212529;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .alert-info {
+      background-color: #495057;
+      border-color: #343a40;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .alert .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    body.dark-theme a {
+      color: #adb5bd;
+    }
+
+    body.dark-theme a:hover {
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .text-decoration-none {
+      color: #adb5bd !important;
+    }
+
+    body.dark-theme .text-decoration-none:hover {
+      color: #f8f9fa !important;
+    }
+
+    body.dark-theme .nav-item {
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .container {
+      color: #f8f9fa;
+    }
+
+    body.dark-theme h1, 
+    body.dark-theme h2, 
+    body.dark-theme h3, 
+    body.dark-theme h4, 
+    body.dark-theme h5, 
+    body.dark-theme h6 {
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .dropdown-menu {
+      background-color: #343a40;
+      border-color: #212529;
+    }
+
+    body.dark-theme .dropdown-item {
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .dropdown-item:hover {
+      background-color: #495057;
+      color: #f8f9fa;
+    }
+
+    body.dark-theme .dropdown-divider {
+      border-color: #495057;
+    }
+
+    /* Estilos para los botones de control */
+    .control-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-right: 1rem;
+    }
+
+    .btn-flash {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #000;
+    }
+
+    .btn-flash:hover {
+      background-color: #ffca2c;
+      border-color: #ffc720;
+      color: #000;
+    }
+
+    .btn-setpoint {
+      background-color: #0dcaf0;
+      border-color: #0dcaf0;
+      color: #000;
+    }
+
+    .btn-setpoint:hover {
+      background-color: #31d2f2;
+      border-color: #25cff2;
+      color: #000;
+    }
+
+    body.dark-theme .btn-flash {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #000;
+    }
+
+    body.dark-theme .btn-flash:hover {
+      background-color: #ffca2c;
+      border-color: #ffc720;
+      color: #000;
+    }
+
+    body.dark-theme .btn-setpoint {
+      background-color: #0dcaf0;
+      border-color: #0dcaf0;
+      color: #000;
+    }
+
+    body.dark-theme .btn-setpoint:hover {
+      background-color: #31d2f2;
+      border-color: #25cff2;
+      color: #000;
+    }
+
+    .flash-messages {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      max-width: 300px;
+    }
+
+    .flash-message {
+      margin-bottom: 10px;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .flash-message.fade-out {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flash-messages">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger alert-dismissible fade show flash-message" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
   </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
 
   {% if session.get("user_id") %}
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{{ url_for('index') }}">Sistema de Autenticación</a>
+      <a class="navbar-brand" href="{{ url_for('index') }}">Control de Nodos</a>
       <div class="d-flex align-items-center">
         <button id="theme-toggle" class="btn btn-outline-light me-3" title="Cambiar tema">
           <i class="bi bi-sun-fill"></i>
@@ -43,9 +291,7 @@
     </div>
   </nav>
   {% endif %}
-</head>
 
-<body>
   <div class="container pt-4">
     {% block body %}
     {% endblock %}
@@ -67,12 +313,10 @@
       function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         if (theme === 'dark') {
-          themeCss.href = 'https://bootswatch.com/5/darkly/bootstrap.min.css';
           if (themeIcon) themeIcon.className = 'bi bi-moon-fill';
           document.body.classList.remove('light-theme');
           document.body.classList.add('dark-theme');
         } else {
-          themeCss.href = 'https://bootswatch.com/5/flatly/bootstrap.min.css';
           if (themeIcon) themeIcon.className = 'bi bi-sun-fill';
           document.body.classList.remove('dark-theme');
           document.body.classList.add('light-theme');
@@ -95,6 +339,19 @@
         // Si no está el toggle (usuario no logueado), forzar claro
         applyTheme('light');
       }
+    });
+
+    // Auto-cerrar los mensajes después de 5 segundos
+    document.addEventListener('DOMContentLoaded', function() {
+      const flashMessages = document.querySelectorAll('.flash-message');
+      flashMessages.forEach(function(message) {
+        setTimeout(function() {
+          message.classList.add('fade-out');
+          setTimeout(function() {
+            message.remove();
+          }, 500);
+        }, 5000);
+      });
     });
   </script>
 </body>

@@ -13,8 +13,11 @@ services:
     ports:
       - "8001:8001"   
     networks:
-      - proxy
+      proxy:
+        aliases:
+          - crudflask2
     restart: unless-stopped
 networks:
   proxy:
     external: true
+    name: proxy

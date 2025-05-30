@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="text-center pt-5">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h1 class="card-title mb-4">Agregar Nodo</h1>
+            <form action="{{ url_for('agregar_nodo') }}" method="POST">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre del Nodo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_dispositivo" class="form-label">ID del Dispositivo</label>
+                    <input type="text" class="form-control" id="id_dispositivo" name="id_dispositivo" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

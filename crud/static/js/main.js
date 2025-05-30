@@ -1,15 +1,3 @@
-const btnDelete= document.querySelectorAll('.btn-borrar');
-if(btnDelete) {
-  const btnArray = Array.from(btnDelete);
-  btnArray.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      if(!confirm('¿Está seguro de querer borrar?')){
-        e.preventDefault();
-      }
-    });
-  })
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {  // Solo para usuarios autenticados
@@ -35,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.classList.remove('light-theme');
                 document.body.classList.add('dark-theme');
             } else {
-                themeCss.href = 'https://bootswatch.com/5/darkly/bootstrap.min.css';
+                themeCss.href = 'https://bootswatch.com/5/flatly/bootstrap.min.css';
                 themeIcon.className = 'bi bi-sun-fill';
                 document.body.classList.remove('dark-theme');
                 document.body.classList.add('light-theme');

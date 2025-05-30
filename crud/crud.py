@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_mysqldb import MySQL
 import os, logging
 from functools import wraps
@@ -20,13 +20,24 @@ app.config["MYSQL_USER"] = os.environ["MYSQL_USER"]
 app.config["MYSQL_PASSWORD"] = os.environ["MYSQL_PASSWORD"]
 app.config["MYSQL_DB"] = os.environ["MYSQL_DB"]
 app.config["MYSQL_HOST"] = os.environ["MYSQL_HOST"]
-app.config["PERMANENT_SESSION_LIFETIME"] = 180
+app.config["PERMANENT_SESSION_LIFETIME"] = 300
 
 # Logging
 logging.basicConfig(format='%(asctime)s - CRUD - %(levelname)s - %(message)s', level=logging.INFO)
 
 # Inicializar la base de datos
 mysql = MySQL(app)
+
+# Verificar conexión a la base de datos
+try:
+    with app.app_context():
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT 1")
+        cur.close()
+        logging.info(f"Conexión a la base de datos establecida correctamente en {app.config['MYSQL_HOST']}")
+except Exception as e:
+    logging.error(f"Error al conectar con la base de datos: {str(e)}")
+    raise
 
 # Rutas
 
@@ -38,126 +49,168 @@ def require_login(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# Modificar la ruta principal para consultar y pasar la lista de nodos
 @app.route('/')
 @require_login
 def index():
-    return render_template('bienvenida.html', username=session.get("user_id"))
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT id, nombre FROM nodos")
+        nodos = cur.fetchall()
+        cur.close()
+        return render_template('bienvenida.html', username=session.get("user_id"), nodos=nodos)
+    except Exception as e:
+        logging.error(f"Error al obtener nodos: {str(e)}")
+        flash("Error al cargar la lista de nodos")
+        return redirect(url_for('index'))
 
 @app.route("/registrar", methods=["GET", "POST"])
 def registrar():
     if request.method == "POST":
-        if not request.form.get("usuario"):
-            flash("El campo usuario es obligatorio")
-            return redirect(url_for('registrar'))
-        elif not request.form.get("password"):
-            flash("El campo contraseña es obligatorio")
-            return redirect(url_for('registrar'))
-
-        passhash = generate_password_hash(request.form.get("password"), method='scrypt', salt_length=16)
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO usuarios (usuario, hash) VALUES (%s,%s)", (request.form.get("usuario"), passhash[17:]))
-        if mysql.connection.affected_rows():
-            flash('Usuario registrado exitosamente')
-            logging.info("Se agregó un usuario")
+        try:
+            usuario = request.form.get("usuario")
+            password = request.form.get("password")
+            
+            if not usuario:
+                flash("El campo usuario es obligatorio")
+                return redirect(url_for('registrar'))
+            elif not password:
+                flash("El campo contraseña es obligatorio")
+                return redirect(url_for('registrar'))
+            
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM usuarios WHERE usuario = %s", (usuario,))
+            if cur.fetchone():
+                flash("El usuario ya existe")
+                return redirect(url_for('registrar'))
+            
+            passhash = generate_password_hash(password, method='scrypt', salt_length=16)
+            cur.execute("INSERT INTO usuarios (usuario, hash) VALUES (%s, %s)", (usuario, passhash[17:]))
             mysql.connection.commit()
-            return redirect(url_for('login'))
-        else:
-            flash('Error al registrar el usuario')
+            
+            if mysql.connection.affected_rows():
+                flash("¡Usuario registrado correctamente! Por favor inicie sesión")
+                logging.info("Se agregó un usuario")
+                return redirect(url_for('login'))
+            
+        except Exception as e:
+            logging.error(f"Error en el registro: {str(e)}")
+            flash('Error al registrar el usuario. Por favor, intente nuevamente.')
             return redirect(url_for('registrar'))
-
+        finally:
+            if 'cur' in locals():
+                cur.close()
+            
     return render_template('registrar.html')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        if not request.form.get("usuario"):
-            flash("El campo usuario es obligatorio")
-            return redirect(url_for('login'))
-        elif not request.form.get("password"):
-            flash("El campo contraseña es obligatorio")
-            return redirect(url_for('login'))
+        try:
+            usuario = request.form.get("usuario")
+            password = request.form.get("password")
+            
+            logging.info(f"Intento de login para usuario: {usuario}")
+            
+            if not usuario:
+                flash("El campo usuario es obligatorio")
+                return redirect(url_for('login'))
+            elif not password:
+                flash("El campo contraseña es obligatorio")
+                return redirect(url_for('login'))
 
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM usuarios WHERE usuario LIKE %s", (request.form.get("usuario"),))
-        rows = cur.fetchone()
-        if rows and check_password_hash('scrypt:32768:8:1$' + rows[2], request.form.get("password")):
-            session.permanent = True
-            session["user_id"] = request.form.get("usuario")
-            logging.info("Se autenticó correctamente")
-            return redirect(url_for('index'))
-        else:
-            flash('Usuario o contraseña incorrecto')
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT * FROM usuarios WHERE usuario = %s", (usuario,))
+            rows = cur.fetchone()
+            
+            if rows and check_password_hash('scrypt:32768:8:1$' + rows[2], password):
+                session.permanent = True
+                session["user_id"] = usuario
+                logging.info(f"Usuario autenticado exitosamente: {usuario}")
+                return redirect(url_for('index'))
+            else:
+                flash('Usuario o contraseña incorrecto')
+                logging.warning(f"Intento de login fallido para usuario: {usuario}")
+                return redirect(url_for('login'))
+        except Exception as e:
+            logging.error(f"Error en el login: {str(e)}")
+            flash('Error al iniciar sesión. Por favor, intente nuevamente.')
             return redirect(url_for('login'))
+        finally:
+            if 'cur' in locals():
+                cur.close()
+            
     return render_template('login.html')
 
-"""
-@app.route('/')
-@require_login
-def index():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contactos')
-    datos = cur.fetchall()
-    cur.close()
-    return render_template('index.html', contactos = datos)
-"""
-
-"""
-@app.route('/add_contact', methods=['POST'])
-@require_login
-def add_contact():
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        tel = request.form['tel']
-        email = request.form['email']
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO contactos (nombre, tel, email) VALUES (%s,%s,%s)"
-                    , (nombre, tel, email))
-        if mysql.connection.affected_rows():
-            flash('Se agregó un contacto')  # usa sesión
-            logging.info("se agregó un contacto")
-            mysql.connection.commit()
-    return redirect(url_for('index'))
-"""
-"""
-@app.route('/borrar/<string:id>', methods = ['GET'])
-@require_login
-def borrar_contacto(id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM contactos WHERE id = {0}'.format(id))
-    if mysql.connection.affected_rows():
-        flash('Se eliminó un contacto')  # usa sesión
-        logging.info("se eliminó un contacto")
-        mysql.connection.commit()
-    return redirect(url_for('index'))
-
-@app.route('/editar/<id>', methods = ['GET'])
-@require_login
-def conseguir_contacto(id):
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contactos WHERE id = %s', (id,))
-    datos = cur.fetchone()
-    logging.info(datos)
-    return render_template('editar-contacto.html', contacto = datos)
-
-@app.route('/actualizar/<id>', methods=['POST'])
-@require_login
-def actualizar_contacto(id):
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        tel = request.form['tel']
-        email = request.form['email']
-        cur = mysql.connection.cursor()
-        cur.execute("UPDATE contactos SET nombre=%s, tel=%s, email=%s WHERE id=%s", (nombre, tel, email, id))
-    if mysql.connection.affected_rows():
-        flash('Se actualizó un contacto')  # usa sesión
-        logging.info("se actualizó un contacto")
-        mysql.connection.commit()
-    return redirect(url_for('index'))
-"""
-
 @app.route("/logout")
-@require_login
 def logout():
-    logging.info("el usuario {} cerró su sesión".format(session.get("user_id")))
     session.clear()
     return redirect(url_for('login'))
+
+# Configuración para manejar CORS y respuestas JSON
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
+# Nuevas rutas para el control de nodos
+@app.route('/flash', methods=['POST'])
+@require_login
+def flash_command():
+    try:
+        logging.info("Recibida petición POST a /flash")
+        flash("Comando de destello enviado correctamente")
+        return redirect(url_for('index'))
+    except Exception as e:
+        logging.error(f"Error al procesar comando de destello: {str(e)}")
+        flash('Error al enviar el comando de destello')
+        return redirect(url_for('index'))
+
+@app.route('/setpoint', methods=['POST'])
+@require_login
+def setpoint_command():
+    try:
+        logging.info("Recibida petición POST a /setpoint")
+        flash("Setpoint actualizado correctamente")
+        return redirect(url_for('index'))
+    except Exception as e:
+        logging.error(f"Error al actualizar setpoint: {str(e)}")
+        flash('Error al actualizar el setpoint')
+        return redirect(url_for('index'))
+
+@app.route('/values', methods=['GET'])
+@require_login
+def get_values():
+    return jsonify({
+        "flash": 1,
+        "setpoint": 0.0
+    }), 200
+
+@app.route('/agregar_nodo', methods=['GET', 'POST'])
+@require_login
+def agregar_nodo():
+    if request.method == 'POST':
+        try:
+            nombre = request.form.get('nombre')
+            id_dispositivo = request.form.get('id_dispositivo')
+            
+            if not nombre or not id_dispositivo:
+                flash("Todos los campos son obligatorios")
+                return redirect(url_for('agregar_nodo'))
+            
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO nodos (nombre, id_dispositivo) VALUES (%s, %s)", (nombre, id_dispositivo))
+            mysql.connection.commit()
+            cur.close()
+            
+            flash("¡Nodo agregado correctamente!")
+            return redirect(url_for('index'))
+            
+        except Exception as e:
+            logging.error(f"Error al agregar nodo: {str(e)}")
+            flash('Error al agregar el nodo. Por favor, intente nuevamente.')
+            return redirect(url_for('agregar_nodo'))
+    
+    return render_template('agregar_nodo.html')
