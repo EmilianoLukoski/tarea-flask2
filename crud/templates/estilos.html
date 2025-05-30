@@ -1,0 +1,307 @@
+<!-- Estilos comunes para toda la aplicación -->
+<style>
+  /* Estilos para la barra de navegación */
+  .navbar {
+    background-color: #343a40 !important;
+  }
+
+  .nav-item {
+    color: #f8f9fa !important;
+  }
+
+  /* Estilos para el tema oscuro */
+  body.dark-theme {
+    background-color: #212529;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .navbar {
+    background-color: #343a40 !important;
+  }
+
+  body.dark-theme .navbar-brand,
+  body.dark-theme .nav-link {
+    color: #f8f9fa !important;
+  }
+
+  body.dark-theme .card {
+    background-color: #343a40;
+    border-color: #212529;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .card-title {
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .form-control {
+    background-color: #212529;
+    border-color: #495057;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .form-control:focus {
+    background-color: #212529;
+    color: #f8f9fa;
+    border-color: #6c757d;
+    box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);
+  }
+
+  body.dark-theme .form-control::placeholder {
+    color: #adb5bd;
+  }
+
+  /* Estilos para botones */
+  body.dark-theme .btn-primary {
+    background-color: #495057;
+    border-color: #343a40;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .btn-primary:hover {
+    background-color: #343a40;
+    border-color: #212529;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .btn-danger:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .btn-outline-light {
+    color: #f8f9fa;
+    border-color: #f8f9fa;
+  }
+
+  body.dark-theme .btn-outline-light:hover {
+    background-color: #f8f9fa;
+    color: #212529;
+  }
+
+  /* Estilos para alertas */
+  body.dark-theme .alert {
+    background-color: #343a40;
+    border-color: #212529;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .alert-info {
+    background-color: #495057;
+    border-color: #343a40;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .alert .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+  }
+
+  /* Estilos para enlaces */
+  body.dark-theme a {
+    color: #adb5bd;
+  }
+
+  body.dark-theme a:hover {
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .text-decoration-none {
+    color: #adb5bd !important;
+  }
+
+  body.dark-theme .text-decoration-none:hover {
+    color: #f8f9fa !important;
+  }
+
+  /* Estilos para textos y contenedores */
+  body.dark-theme .nav-item {
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .container {
+    color: #f8f9fa;
+  }
+
+  body.dark-theme h1, 
+  body.dark-theme h2, 
+  body.dark-theme h3, 
+  body.dark-theme h4, 
+  body.dark-theme h5, 
+  body.dark-theme h6 {
+    color: #f8f9fa;
+  }
+
+  /* Estilos para dropdowns */
+  body.dark-theme .dropdown-menu {
+    background-color: #343a40;
+    border-color: #212529;
+  }
+
+  body.dark-theme .dropdown-item {
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .dropdown-item:hover {
+    background-color: #495057;
+    color: #f8f9fa;
+  }
+
+  body.dark-theme .dropdown-divider {
+    border-color: #495057;
+  }
+
+  /* Estilos para botones de control */
+  .control-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-right: 1rem;
+  }
+
+  .btn-flash {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+  }
+
+  .btn-flash:hover {
+    background-color: #ffca2c;
+    border-color: #ffc720;
+    color: #000;
+  }
+
+  .btn-setpoint {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: #000;
+  }
+
+  .btn-setpoint:hover {
+    background-color: #31d2f2;
+    border-color: #25cff2;
+    color: #000;
+  }
+
+  /* Estilos para mensajes flash */
+  .flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 300px;
+  }
+
+  .flash-message {
+    margin-bottom: 10px;
+    animation: slideIn 0.5s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .flash-message.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeOut {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  /* Estilos para alertas específicas */
+  .alert-success {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: #fff !important;
+  }
+
+  .alert-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+  }
+
+  body.dark-theme .alert-success {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: #fff !important;
+  }
+
+  body.dark-theme .alert-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+  }
+
+  /* Estilos para el mensaje de información */
+  .info-message {
+    background-color: #ced4da !important;
+    border-color: #adb5bd !important;
+    color: #343a40 !important;
+  }
+
+  body.dark-theme .info-message {
+    background-color: #495057 !important;
+    border-color: #343a40 !important;
+    color: #f8f9fa !important;
+  }
+
+  /* Estilos para los botones de control específicos */
+  .btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+    min-width: 120px;
+  }
+
+  .btn-warning:hover {
+    background-color: #ffb300;
+    border-color: #ffb300;
+    color: #000;
+  }
+
+  .fa-lightbulb {
+    color: #b8860b;
+    opacity: 1;
+    filter: drop-shadow(0 0 2px rgb(226, 171, 32));
+    font-size: 1.1em;
+  }
+
+  .card-body.text-center {
+    padding: 2rem;
+  }
+
+  .input-group {
+    width: auto;
+  }
+
+  .input-group .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .input-group .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+</style> 
