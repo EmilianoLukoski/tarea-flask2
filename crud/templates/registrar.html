@@ -97,6 +97,17 @@ body.dark-theme .alert-danger {
 </style>
 
 <script>
+// Aplicar tema oscuro inmediatamente si está activo
+document.addEventListener('DOMContentLoaded', function() {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedTheme = localStorage.getItem('theme');
+    
+    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.body.classList.add('dark-theme');
+    }
+});
+
 // Auto-cerrar los mensajes después de 3 segundos
 document.addEventListener('DOMContentLoaded', function() {
     const flashMessages = document.querySelectorAll('.flash-message');
