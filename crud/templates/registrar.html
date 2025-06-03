@@ -1,17 +1,6 @@
 {% extends "layout.html" %}
 
 {% block body %}
-{% if get_flashed_messages() %}
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
-    {% for category, message in get_flashed_messages(with_categories=true) %}
-    <div class="alert alert-dismissible fade show flash-message {% if category == 'success' %}alert-success{% elif category == 'danger' %}alert-danger{% endif %}" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -40,62 +29,6 @@
   </div>
 </div>
 
-<style>
-.alert-success {
-    background-color: #198754 !important;
-    border-color: #198754 !important;
-    color: #fff !important;
-}
-
-.alert-danger {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-    color: #fff !important;
-}
-
-body.dark-theme .alert-success {
-    background-color: #198754 !important;
-    border-color: #198754 !important;
-    color: #fff !important;
-}
-
-body.dark-theme .alert-danger {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-    color: #fff !important;
-}
-
-.flash-message {
-    animation: slideIn 0.5s ease-out;
-}
-
-.flash-message.fade-out {
-    animation: fadeOut 0.5s ease-out forwards;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-</style>
-
 <script>
 // Aplicar tema oscuro inmediatamente si está activo
 document.addEventListener('DOMContentLoaded', function() {
@@ -106,19 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.setAttribute('data-theme', 'dark');
         document.body.classList.add('dark-theme');
     }
-});
-
-// Auto-cerrar los mensajes después de 3 segundos
-document.addEventListener('DOMContentLoaded', function() {
-    const flashMessages = document.querySelectorAll('.flash-message');
-    flashMessages.forEach(function(message) {
-        setTimeout(function() {
-            message.classList.add('fade-out');
-            setTimeout(function() {
-                message.remove();
-            }, 500);
-        }, 3000);
-    });
 });
 </script>
 {% endblock %}

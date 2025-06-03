@@ -538,4 +538,19 @@
   body.dark-theme .text-center.mt-3 a:hover {
     color: #8bb9fe;
   }
-</style> 
+</style>
+
+<script>
+// Auto-cerrar los mensajes después de 3 segundos
+document.addEventListener('DOMContentLoaded', function() {
+    const flashMessages = document.querySelectorAll('.flash-message');
+    flashMessages.forEach(function(message) {
+        setTimeout(function() {
+            message.classList.add('fade-out');
+            setTimeout(function() {
+                message.remove();
+            }, 500);
+        }, 3000);
+    });
+});
+</script> 
