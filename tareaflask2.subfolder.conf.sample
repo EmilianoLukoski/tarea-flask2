@@ -1,5 +1,5 @@
 location /tareaflask2 {
-    return 301 $scheme://$host/tareaflask2/;
+    return 301 $scheme://$host:23411/tareaflask2/;
 }
 
 location ^~ /tareaflask2/ {

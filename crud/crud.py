@@ -124,10 +124,6 @@ except Exception as e:
 
 
 FERNET_KEY = os.getenv("FERNET_KEY")
-if not FERNET_KEY:
-    logging.error("Variable FERNET_KEY no definida en .env")
-    raise RuntimeError("Falta la variable FERNET_KEY en .env")
-
 fernet = Fernet(FERNET_KEY.encode())
 
 def encrypt_password(raw_password: str) -> str:
@@ -137,7 +133,6 @@ def encrypt_password(raw_password: str) -> str:
 def decrypt_password(encrypted_password: str) -> str:
     plain = fernet.decrypt(encrypted_password.encode())
     return plain.decode()
-
 
 def require_login(f):
     @wraps(f)
@@ -154,12 +149,6 @@ def registrar():
             usuario = request.form.get("usuario")
             password = request.form.get("password")
 
-            if not usuario:
-                flash("El campo usuario es obligatorio", "danger")
-                return redirect(url_for('registrar'))
-            if not password:
-                flash("El campo contraseña es obligatorio", "danger")
-                return redirect(url_for('registrar'))
 
             cur = mysql.connection.cursor()
             cur.execute("SELECT 1 FROM usuarios WHERE usuario = %s", (usuario,))
@@ -194,13 +183,6 @@ def login():
 
             logging.info(f"Intento de login para usuario: {usuario}")
 
-            if not usuario:
-                flash("El campo usuario es obligatorio", "danger")
-                return redirect(url_for('login'))
-            if not password:
-                flash("El campo contraseña es obligatorio", "danger")
-                return redirect(url_for('login'))
-
             cur = mysql.connection.cursor()
             cur.execute("SELECT id, hash, tema FROM usuarios WHERE usuario = %s", (usuario,))
             fila = cur.fetchone()
@@ -225,12 +207,10 @@ def login():
 
     return render_template('login.html')
 
-
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for('login'))
-
 
 @app.after_request
 def after_request(response):
@@ -238,7 +218,6 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
-
 
 @app.route('/')
 @require_login
@@ -501,9 +480,6 @@ def agregar_broker():
         password_b = request.form.get("password_broker")
         puerto     = request.form.get("puerto_tls")
 
-        if not dominio or not usuario_b or not password_b or not puerto:
-            flash("Todos los campos son obligatorios", "danger")
-            return redirect(url_for('agregar_broker'))
         try:
             puerto = int(puerto)
         except ValueError:
@@ -554,10 +530,6 @@ def editar_broker(id_broker):
         password_n  = request.form.get("password_broker")
         puerto_n    = request.form.get("puerto_tls")
 
-        if not dominio_n or not usuario_n or not password_n or not puerto_n:
-            flash("Todos los campos son obligatorios", "danger")
-            cur.close()
-            return redirect(url_for('editar_broker', id_broker=id_broker))
         try:
             puerto_n = int(puerto_n)
         except ValueError:
