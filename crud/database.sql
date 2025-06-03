@@ -1,5 +1,5 @@
 -- -----------------------------------------------------
--- 1. Eliminación (opcional) y creación de la base de datos
+-- 1. Eliminación y creación de la base de datos
 -- -----------------------------------------------------
 DROP DATABASE IF EXISTS `tareaflask`;
 CREATE DATABASE IF NOT EXISTS `tareaflask`
@@ -49,23 +49,30 @@ CREATE TABLE `brokers` (
 
 
 -- -----------------------------------------------------
--- 4. Tabla de nodos/dispositivos (vinculada a brokers.id)
---     - Un mismo broker no podrá cargar dos veces el mismo id_dispositivo.
---     - Diferentes brokers (incluso de distinto usuario) pueden tener el mismo id_dispositivo.
+-- 4. Tabla de nodos/dispositivos (vinculada a usuarios.id y brokers.id)
+--     - Un mismo usuario no podrá cargar dos veces el mismo id_dispositivo.
+--     - Diferentes usuarios pueden tener el mismo id_dispositivo.
 -- -----------------------------------------------------
 CREATE TABLE `nodos` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(100) NOT NULL,
   `id_dispositivo` VARCHAR(50) NOT NULL,
   `broker_id` INT(11) NOT NULL,
+  `usuario_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_nodos_broker_id` (`broker_id`),
+  KEY `idx_nodos_usuario_id` (`usuario_id`),
   CONSTRAINT `fk_nodos_brokers`
     FOREIGN KEY (`broker_id`)
     REFERENCES `brokers`(`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  UNIQUE KEY `uq_broker_dispositivo` (`broker_id`, `id_dispositivo`)
+  CONSTRAINT `fk_nodos_usuarios`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `usuarios`(`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  UNIQUE KEY `uq_usuario_dispositivo` (`usuario_id`, `id_dispositivo`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_general_ci;

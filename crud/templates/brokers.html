@@ -26,7 +26,7 @@
         <tr>
           <th>Dominio</th>
           <th>Usuario</th>
-          <th>Acciones</th>
+          <th class="text-end">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +35,7 @@
             <tr>
               <td>{{ broker.dominio }}</td>
               <td>{{ broker.usuario }}</td>
-              <td>
+              <td class="text-end">
                 <div class="btn-group">
                   <a href="{{ url_for('editar_broker', id_broker=broker.id) }}" class="btn btn-warning btn-sm">
                     <i class="bi bi-pencil"></i> Editar
@@ -58,81 +58,6 @@
     </table>
   </div>
 </div>
-
-<style>
-.alert-success {
-    background-color: #198754 !important;
-    border-color: #198754 !important;
-    color: #fff !important;
-}
-
-.alert-danger {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-    color: #fff !important;
-}
-
-body.dark-theme .alert-success {
-    background-color: #198754 !important;
-    border-color: #198754 !important;
-    color: #fff !important;
-}
-
-body.dark-theme .alert-danger {
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-    color: #fff !important;
-}
-
-.flash-message {
-    animation: slideIn 0.5s ease-out;
-}
-
-.flash-message.fade-out {
-    animation: fadeOut 0.5s ease-out forwards;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-
-/* Estilos para los botones de acción */
-.btn-group {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    min-width: 90px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-sm i {
-    margin-right: 0.25rem;
-}
-</style>
 
 <script>
 // Auto-cerrar los mensajes después de 3 segundos

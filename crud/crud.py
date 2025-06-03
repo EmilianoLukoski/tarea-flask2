@@ -250,7 +250,7 @@ def index():
             SELECT n.id, n.nombre, n.id_dispositivo, b.dominio
             FROM nodos AS n
             JOIN brokers AS b ON n.broker_id = b.id
-            WHERE b.usuario_id = %s
+            WHERE n.usuario_id = %s
         """, (user_id,))
         nodos = cur.fetchall()
 
@@ -304,8 +304,8 @@ def flash_command():
         # Obtener el broker_id del dispositivo seleccionado
         cur = mysql.connection.cursor()
         cur.execute(
-            "SELECT b.id FROM nodos n JOIN brokers b ON n.broker_id = b.id WHERE n.id_dispositivo = %s",
-            (id_dispositivo,)
+            "SELECT b.id FROM nodos n JOIN brokers b ON n.broker_id = b.id WHERE n.id_dispositivo = %s AND n.usuario_id = %s",
+            (id_dispositivo, session["user_id"])
         )
         broker_result = cur.fetchone()
         cur.close()
@@ -343,8 +343,8 @@ def setpoint_command():
         # Obtener el broker_id del dispositivo seleccionado
         cur = mysql.connection.cursor()
         cur.execute(
-            "SELECT b.id FROM nodos n JOIN brokers b ON n.broker_id = b.id WHERE n.id_dispositivo = %s",
-            (id_dispositivo,)
+            "SELECT b.id FROM nodos n JOIN brokers b ON n.broker_id = b.id WHERE n.id_dispositivo = %s AND n.usuario_id = %s",
+            (id_dispositivo, session["user_id"])
         )
         broker_result = cur.fetchone()
         cur.close()
@@ -406,8 +406,8 @@ def agregar_nodo():
                 return redirect(url_for('agregar_nodo'))
 
             cur.execute(
-                "INSERT INTO nodos (nombre, id_dispositivo, broker_id) VALUES (%s, %s, %s)",
-                (nombre, id_dispositivo, broker_id)
+                "INSERT INTO nodos (nombre, id_dispositivo, broker_id, usuario_id) VALUES (%s, %s, %s, %s)",
+                (nombre, id_dispositivo, broker_id, user_id)
             )
             mysql.connection.commit()
             cur.close()

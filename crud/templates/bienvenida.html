@@ -20,7 +20,7 @@
           <th>Nombre</th>
           <th>Dispositivo</th>
           <th>Broker</th>
-          <th>Acciones</th>
+          <th class="text-end">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -30,7 +30,7 @@
               <td>{{ nodo[1] }}</td>                {# nodo[1] = nombre #}
               <td>{{ nodo[2] }}</td>                {# nodo[2] = id_dispositivo #}
               <td>{{ nodo[3] }}</td>                {# nodo[3] = dominio del broker #}
-              <td>
+              <td class="text-end">
                 <!-- Formulario para seleccionar dispositivo y enviar comandos -->
                 <form method="POST" action="{{ url_for('seleccionar_dispositivo') }}" class="d-inline">
                   <input type="hidden" name="id_dispositivo" value="{{ nodo[2] }}">
@@ -60,7 +60,7 @@
             <i class="bi bi-lightning-charge-fill"></i> Destello
           </button>
         </form>
-        <form method="GET" action="{{ url_for('setpoint_command') }}" class="d-inline me-2">
+        <form method="GET" action="{{ url_for('setpoint_command') }}" class="d-inline">
           <div class="input-group">
             <input type="number" name="setpoint" placeholder="Setpoint" class="form-control" required>
             <button type="submit" class="btn btn-info">
